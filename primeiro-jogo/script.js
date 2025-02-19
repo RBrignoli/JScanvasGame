@@ -1,5 +1,7 @@
 const canvas = document.getElementById('jogoCanvas')
 const ctx = canvas.getContext('2d')
+let gameOver = false
+let gravidade = 0.5
 
 document.addEventListener("click", (e) => {
     if (gameOver==true){
@@ -7,18 +9,36 @@ document.addEventListener("click", (e) => {
     }
 })
 
-let gameOver = false
+document.addEventListener('keypress', (e) => {
+    console.log(1)
+    if (e.code == 'Space'){
+        console.log(2)
+        personagem.velocidadePulo = -15 
+        personagem.pulando = true
+    }
+})
+
 
 const personagem = {
     posicaox:50,
     posicaoy: canvas.height -50,
     largura: 50,
-    altura: 50
+    altura: 50,
+    velocidadePulo:0,
+    pulando: false
 }
 function desenhaPersonagem () {
     ctx.fillStyle = 'white'
     ctx.fillRect(personagem.posicaox, personagem.posicaoy, personagem.largura, personagem.altura)
 }
+function atualizaPersonagem() {
+    if(personagem.pulando){
+        personagem.velocidadePulo += gravidade
+        personagem.posicaoy += personagem.velocidadePulo
+    }
+    
+}
+
 const obstaculo = {
     posicaoXObstaculo: canvas.width-100,
     posicaoYObstaculo: canvas.height - 100,
@@ -65,6 +85,7 @@ function loop () {
 
     desenhaObstaculo()
     desenhaPersonagem()
+    atualizaPersonagem()
     atualizaObstaculo()
     verificaColisao()
  

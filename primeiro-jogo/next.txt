@@ -1,0 +1,25 @@
+continuação:
+para criar o mecanismo de salto, precisamos implementar:
+- um listener par uma tecla qualquer que vai servir para o pulo (espaço)
+- o conceito de velocidade no eixo y para o personagem (salto)
+- criar uma função que atualiza a posição do personagem, de acordo com estaa velocidade de salto, por exemplo:
+  - quando personagem 'saltar', ele vai se deslocar 10 pixels por frame para cima.
+- se deixarmos só o salto agir, o personagem vai infinitamente para cima,
+   portanto temos que implementar o conceito de gravidade:
+  - na mesma função que atualiza a posição do personagem, cada frame diminui 0,5 pixel pra cima que o personagem se desloca, logo:
+    no primeiro frame ele desloca 10, depois 9,5, 9, 8,5, 8 .... até 0, depois inverte o movimento e cai, como a gravidade manda.
+- se deixarmos só a gravidade agir, a posição y do personagem vai passar do chao, logo, temos que implementar uma forma de:
+  -quando ele chegar de volta a posiçao y inicial, a velocidade do salto volta a se tornar 0.
+além disso, precisamos corrigir a funcionalidade de colisão, que não esta permitindo o personagem passar por cima do obstaculo.
+
+-aqui temos que tomar uma decisão, fazer um jogo tipo saltar por obstaculos, ou um jogo tipo flappy-bird?
+-Para um jogo tipo saltar por obstaculos:
+  Somente 1 salto é permitido por vez.
+  precisamos do conceito de "chão", ou o personagem passa direto
+  então, se a posição y do personagem for igual ou menor do que a parte de baixo do canvas, a velocidade vai a 0.
+Para um jogo tipo flappy bird:
+  é permitido multiplos saltos consecutivos.
+  precisamos implementar outro obstaculo no topo (para o personagem passar por "dentro")
+
+
+
