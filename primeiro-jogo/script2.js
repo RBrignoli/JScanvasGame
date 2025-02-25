@@ -59,3 +59,17 @@ document.addEventListener('keypress', (e) =>{
         personagem.saltar()
     }
 })
+
+function loop () {
+    ctx.clearRect(0,0,canvas.width, canvas.height)
+
+    obstaculo.desenhar(ctx, 'red')
+    personagem.desenhar(ctx, 'white')
+    obstaculo.atualizar()
+    personagem.atualizar()
+    verificaColisao()
+ 
+    requestAnimationFrame(loop)
+}
+
+loop()
