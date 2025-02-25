@@ -1,3 +1,7 @@
+const canvas = document.getElementById('gameCanvas')
+const ctx = canvas.getContext('2d')
+let gameOver = false
+
 class Entidade {
     #gravidade
     constructor(x,y,largura,altura){
@@ -42,3 +46,16 @@ class Obstaculo extends Entidade{
     }
 }
 
+document.addEventListener("click", (e) => {
+    if (gameOver==true){
+        location.reload()
+    }
+})
+
+document.addEventListener('keypress', (e) =>{
+    if (e.code == 'Space' && personagem.pulando == false){
+        // personagem.velocidadey = -15
+        // personagem.pulando = true
+        personagem.saltar()
+    }
+})
