@@ -1,6 +1,7 @@
 const canvas = document.getElementById('jogoCanvas')
 const ctx = canvas.getContext('2d')
 let gameOver = false
+let maxPontuacao = localStorage.getItem('maxPontuacao') ? parseInt(localStorage.getItem('maxPontuacao')) : 0
 
 class Entidade {
     #gravidade
@@ -19,6 +20,7 @@ class Entidade {
         //modificar esta entidade para atualizar posição do objeto na tela
         console.log('atualizar posiçao da entidade na tela')
     }
+    
     getGravidade() {
         return this.#gravidade;
     }
@@ -26,10 +28,14 @@ class Entidade {
 class Personagem extends Entidade{
     #velocidadey
     #pulando
+    #pontuou
+    #pontuacao
     constructor(x,y,largura,altura){
         super(x,y,largura,altura);
         this.#velocidadey=0
         this.#pulando = false
+        this.#pontuou = false
+        this.#pontuacao = 0
     }
     saltar = function(){
         this.#velocidadey -= 15
@@ -45,6 +51,7 @@ class Personagem extends Entidade{
             if(this.y>=canvas.height-50){
                 this.#velocidadey = 0
                 this.#pulando=false
+                this.#pontuou=false
             }
         }
     }
@@ -58,6 +65,12 @@ class Personagem extends Entidade{
             this.#houveColisao(obstaculo)
         }
     }
+    verificarPontuacao= function(obstaculo){
+        if(!this.#pontuou && this.x > obstaculo.x + obstaculo.largura){  
+            this.#pontuou = true
+            this.#pontuacao +=1
+        }
+    }
     #houveColisao = function (obstaculo){
         obstaculo.pararObstaculo()
         obstaculo.atualizar()
@@ -67,6 +80,19 @@ class Personagem extends Entidade{
         ctx.font="50px Arial"
         ctx.fillText("GAME OVER",(canvas.width/2)-150,(canvas.height/2))
         gameOver=true
+        ctx.font="20px Arial"
+        if (this.#pontuacao > maxPontuacao){
+            localStorage.setItem('maxPontuacao', this.#pontuacao)
+            ctx.fillText(`Novo Record: ${this.#pontuacao}`,(canvas.width/2)-150,(canvas.height/2)+40)
+        }else{
+            ctx.fillText(`Sua pontuação: ${this.#pontuacao}, record atual: ${maxPontuacao}`,(canvas.width/2)-150,(canvas.height/2)+40)
+
+        }
+    }
+    desenhaPontuacao = function(){
+        ctx.fillStyle='white'
+        ctx.font="20px Arial"
+        ctx.fillText(`pontos: ${this.#pontuacao}`,50,50)
     }
 
 }
@@ -117,13 +143,15 @@ function loop () {
     obstaculo.desenhar(ctx, 'red')
     personagem.desenhar(ctx, 'white')
     personagem.verificarColisao(obstaculo)
+    personagem.verificarPontuacao(obstaculo)
     obstaculo.atualizar()
     personagem.atualizar()
+    personagem.desenhaPontuacao()
     requestAnimationFrame(loop)
 }
 
 loop()
 
+// adicionar pontuação - ok
 // adicionar multiplos objetos
-// adicionar pontuação
 // aplicar polimorfismo para mudar o desenho do personagem
