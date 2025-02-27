@@ -2,7 +2,6 @@ const canvas = document.getElementById('jogoCanvas')
 const ctx = canvas.getContext('2d')
 let gameOver = false
 let maxPontuacao = localStorage.getItem('maxPontuacao') ? parseInt(localStorage.getItem('maxPontuacao')) : 0
-
 class Entidade {
     #gravidade
     constructor(x,y,largura,altura){
@@ -36,6 +35,8 @@ class Personagem extends Entidade{
         this.#pulando = false
         this.#pontuou = false
         this.#pontuacao = 0
+        this.image = new Image(this.largura, this.altura)
+        this.image.src='./static/personagem3.png'
     }
     saltar = function(){
         this.#velocidadey -= 15
@@ -95,12 +96,7 @@ class Personagem extends Entidade{
         ctx.fillText(`pontos: ${this.#pontuacao}`,50,50)
     }
     desenhar= function () {
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, 25, 0, 2 * Math.PI);
-        ctx.fillStyle='blue'
-        ctx.fill()
-        ctx.stroke();
-        // ctx.fillRect(this.x, this.y, this.largura, this.altura)
+        ctx.drawImage(this.image,this.x, this.y, this.largura, this.altura)
     }
 
 }
@@ -111,6 +107,8 @@ class Obstaculo extends Entidade{
         this.#velocidadex=4
         this.tempoProximoObstaculo = Math.floor(Math.random()*100) +50
         this.proximoObstaculo = false
+        this.image = new Image(this.largura, this.altura)
+        this.image.src='./static/obstaculo.png'
     }
     getVelocidadeX = function () {
         return this.#velocidadex
@@ -133,6 +131,9 @@ class Obstaculo extends Entidade{
     }
     pararObstaculo = function () {
         this.#velocidadex = 0
+    }
+    desenhar = function (ctx, cor) {
+        ctx.drawImage(this.image,this.x, this.y, this.largura, this.altura)
     }
 }
 const obstaculos = []
@@ -171,7 +172,3 @@ function loop () {
 }
 
 loop()
-
-// adicionar pontuação - ok
-// adicionar multiplos objetos
-// aplicar polimorfismo para mudar o desenho do personagem
