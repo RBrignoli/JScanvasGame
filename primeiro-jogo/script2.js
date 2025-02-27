@@ -94,33 +94,50 @@ class Personagem extends Entidade{
         ctx.font="20px Arial"
         ctx.fillText(`pontos: ${this.#pontuacao}`,50,50)
     }
+    desenhar= function () {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, 25, 0, 2 * Math.PI);
+        ctx.fillStyle='blue'
+        ctx.fill()
+        ctx.stroke();
+        // ctx.fillRect(this.x, this.y, this.largura, this.altura)
+    }
 
 }
 class Obstaculo extends Entidade{
     #velocidadex
     constructor(x,y,largura,altura){
-        super(x,y,largura,altura);
+    super(x,y,largura,altura);
         this.#velocidadex=4
+        this.tempoProximoObstaculo = Math.floor(Math.random()*100) +50
+        this.proximoObstaculo = false
     }
     getVelocidadeX = function () {
         return this.#velocidadex
     }
     atualizar = function(){
         this.x -= this.getVelocidadeX()
-        if (this.x <= 0-this.largura){
-            this.x = canvas.width-100
+        if (this.tempoProximoObstaculo <= 0 && this.proximoObstaculo == false){
             let altura_random = (Math.random() * 50)+90
-            this.altura = altura_random
-            this.y = canvas.height - altura_random
+            let new_y = canvas.height - altura_random 
+            obstaculos.push(new Obstaculo(canvas.width-100,new_y,50,altura_random))
             this.#velocidadex += 0.5
+            this.proximoObstaculo = true
+        } else{
+            this.tempoProximoObstaculo--
         }
+        if (this.x <= 0-this.largura){
+            obstaculos.shift()
+        }
+        
     }
     pararObstaculo = function () {
         this.#velocidadex = 0
     }
 }
+const obstaculos = []
+obstaculos.push(new Obstaculo(canvas.width-100,canvas.height-100,50,100))
 
-const obstaculo = new Obstaculo(canvas.width-100,canvas.height-100,50,100)
 const personagem = new Personagem(50, canvas.height-50, 50, 50)
 
 document.addEventListener("click", (e) => {
@@ -138,16 +155,19 @@ document.addEventListener('keypress', (e) =>{
 })
 
 function loop () {
-    ctx.clearRect(0,0,canvas.width, canvas.height)
-
-    obstaculo.desenhar(ctx, 'red')
-    personagem.desenhar(ctx, 'white')
-    personagem.verificarColisao(obstaculo)
-    personagem.verificarPontuacao(obstaculo)
-    obstaculo.atualizar()
-    personagem.atualizar()
-    personagem.desenhaPontuacao()
-    requestAnimationFrame(loop)
+    if (!gameOver){
+        ctx.clearRect(0,0,canvas.width, canvas.height)
+        personagem.desenhar(ctx, 'white')
+        obstaculos.forEach((obstaculo) =>{
+            obstaculo.desenhar(ctx, 'red')
+            personagem.verificarColisao(obstaculo)
+            personagem.verificarPontuacao(obstaculo)
+            obstaculo.atualizar()
+        })
+        personagem.atualizar()
+        personagem.desenhaPontuacao()
+        requestAnimationFrame(loop)
+    }
 }
 
 loop()
