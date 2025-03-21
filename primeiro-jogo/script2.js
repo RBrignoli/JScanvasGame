@@ -2,6 +2,7 @@ const canvas = document.getElementById('jogoCanvas')
 const ctx = canvas.getContext('2d')
 let gameOver = false
 let maxPontuacao = localStorage.getItem('maxPontuacao') ? parseInt(localStorage.getItem('maxPontuacao')) : 0
+
 class Entidade {
     #gravidade
     constructor(x,y,largura,altura){
