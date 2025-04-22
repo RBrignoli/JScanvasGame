@@ -1,0 +1,3 @@
+Criadores (Abstract Factory, Prototype)
+Estrutural (Proxy, Facade, Decorator)
+Comportamento(Command, Chain of Responsability, Template Method, Mediator)  
