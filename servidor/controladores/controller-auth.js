@@ -13,7 +13,11 @@ const login = (req, res) => {
     if(!bcrypt.compareSync(senha, user.senha)){
         res.status(400).json({msg:"cpf ou senha incorreta"})
     }
-    const token = jwt.sign(user, 'privatekeySuperSegura', {expiresIn: 1000*60*60})
+    const token = jwt.sign(
+        user, 
+        process.env.PRIVATE_KEY_JWT,
+        {expiresIn: 1000*60*60}
+    )
     res.status(200).cookie("TokenJWT", token).json({msg:"Logado com sucesso"})
 }
 

@@ -1,4 +1,7 @@
 const express = require('express')
+require('dotenv').config()
+
+
 const app = express()
 const router_users = require('../rotas/rotas-users')
 const router_auth = require('../rotas/rotas-auth')
